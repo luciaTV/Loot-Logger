@@ -1,0 +1,9 @@
+path	albionlootlogger
+mod	albionlootlogger	(devel)	
+build	-buildmode=exe
+build	-compiler=gc
+build	-trimpath=true
+build	CGO_ENABLED=0
+build	GOARCH=amd64
+build	GOOS=windows
+build	GOAMD64=v1

@@ -1,0 +1,28 @@
+:root{--ll-edge:#ffffff10;--ll-glow:#d8ad5914;--ll-shadow:0 14px 34px #0006}
+.topbar{padding-bottom:14px;border-bottom:1px solid #ffffff0b}
+.logo{border-radius:17px;background:radial-gradient(circle at 35% 25%,#83632f,#312410 47%,#111318 100%);box-shadow:0 10px 30px #0008,0 0 0 4px #d8ad5908}
+.brand h1{font-weight:780;letter-spacing:-.25px}
+.tabs{gap:7px;padding:9px;border-color:#ffffff12;border-radius:19px;background:#10151bdd;box-shadow:var(--ll-shadow),inset 0 1px var(--ll-edge)}
+.tab-button{border-radius:12px;transition:background .16s,border-color .16s,color .16s,transform .16s}
+.tab-button:hover{transform:translateX(2px)}.tab-button.active{background:linear-gradient(135deg,#2a3039,#1b2027);box-shadow:inset 3px 0 var(--gold),0 7px 18px #0005}
+.tab-icon{border:1px solid #ffffff0b;background:#ffffff07}.tab-button.active .tab-icon{border-color:#d8ad5928}
+.command-bar{border-color:#ffffff14;border-radius:17px;background:#0f141ae8;box-shadow:0 12px 34px #0006,inset 0 1px var(--ll-edge)}
+.search,.field select,.field input,.field textarea,.bank-toolbar select{border-color:#ffffff14;background:#0d1218}
+.search:focus,.field select:focus,.field input:focus,.field textarea:focus{border-color:#a98542;box-shadow:0 0 0 3px var(--ll-glow)}
+.btn{border-color:#ffffff14;background:linear-gradient(180deg,#232a33,#181e25);box-shadow:0 5px 14px #0003,inset 0 1px var(--ll-edge)}
+.btn.primary{background:linear-gradient(145deg,#efc874,#a87528);box-shadow:0 8px 22px #d8ad5920,inset 0 1px #fff5}
+.game-card,.overview-card,.stat,.diagnostics,.player,.settings-card,.bank-import,.bank-drop,.insight-card,.pro-card,.all-card,.help-section{border-color:#ffffff12;box-shadow:var(--ll-shadow),inset 0 1px var(--ll-edge)}
+.player{border-radius:19px}
+.item{border-color:#ffffff12;border-radius:16px;background:linear-gradient(155deg,#222a34,#161b22);box-shadow:0 8px 20px #0003;transition:transform .16s,border-color .16s,box-shadow .16s}
+.item:hover{transform:translateY(-3px);border-color:#8a6e38;box-shadow:0 13px 28px #0006,0 0 0 1px #d8ad5910}
+.icon-wrap{border-color:#ffffff12;background:radial-gradient(circle at 50% 42%,#192028,#090c10 74%)}
+.settings-grid{gap:18px}.settings-stack{gap:18px}.settings-card{position:relative;overflow:hidden;border-radius:19px;padding:20px;background:linear-gradient(150deg,#1a2028,#10151b)}
+.settings-card:before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,var(--gold),transparent 45%);opacity:.7}
+.settings-card h3{font-size:15px;letter-spacing:.1px}.setting-list{gap:8px}
+.setting-row,.category-option{border-color:#ffffff10;background:#0e141a;transition:border-color .15s,background .15s,transform .15s}
+.setting-row:hover,.category-option:hover{border-color:#ffffff20;background:#121920}.category-option:hover{transform:translateY(-1px)}
+.toggle-track{box-shadow:inset 0 2px 5px #0005}.toggle input:checked+.toggle-track{box-shadow:0 0 0 3px #d8ad590d,inset 0 2px 5px #0004}
+.options-header h2{font-weight:780;letter-spacing:-.3px}.unsaved.show{box-shadow:0 5px 16px #0004}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+html[data-theme] body{background-image:radial-gradient(circle at 12% -8%,#d8ad5918 0,transparent 30%),radial-gradient(circle at 92% 0,#6da8ff12 0,transparent 28%),linear-gradient(180deg,#ffffff02,transparent 380px)!important;background-size:auto!important;background-position:0 0!important}
+@media(max-width:900px){.tabs{box-shadow:0 10px 28px #0008}.tab-button:hover{transform:none}.settings-card{padding:16px}.item:hover{transform:none}}

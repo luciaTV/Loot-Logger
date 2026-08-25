@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width,initial-scale=1" name="viewport">
+<script src="scripts/inline-00.js">
+</script>
+<title>Albion Loot Logger</title>
+<link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+<div class="app">
+<div class="topbar">
+<div class="brand">
+<div aria-label="Albion Loot Logger raccoon" class="logo">🦝</div>
+<div>
+<h1>Albion Loot Logger</h1>
+<p>Live loot tracking</p>
+</div>
+</div>
+<div class="status starting" id=status>
+<span class="dot">
+</span>
+<span class="status-text" id=statusText>Starting capture…</span>
+</div>
+</div>
+<nav class="tabs">
+<button class="tab-button active" data-tab="loot">
+<span class="tab-icon">◆</span>
+<span class="tab-copy">
+<strong>Loot</strong>
+<small>Live session</small>
+</span>
+</button>
+<button class="tab-button" data-tab="bank">
+<span class="tab-icon">⇄</span>
+<span class="tab-copy">
+<strong>Bank compare</strong>
+<small>Deposits and missing loot</small>
+</span>
+</button>
+<button class="tab-button" data-tab="options">
+<span class="tab-icon">⚙</span>
+<span class="tab-copy">
+<strong>Options</strong>
+<small>Filters and behavior</small>
+</span>
+</button>
+<button class="tab-button" data-tab="analytics">
+<span class="tab-icon">▥</span>
+<span class="tab-copy">
+<strong>Analytics</strong>
+<small>Session diagnostics</small>
+</span>
+</button>
+</nav>
+<section class="tab-panel active" id=lootPanel>
+<section class="game-strip">
+<div class="game-card waiting" id=gameCard>
+<div class="game-indicator">A</div>
+<div class="game-copy">
+<div class="game-label">Albion Online</div>
+<div class="game-value" id=gameValue>Waiting for game</div>
+<div class="game-detail" id=gameDetail>Start Albion Online to begin</div>
+</div>
+</div>
+<div class="game-card host-card waiting" id=hostCard>
+<div class="game-indicator">H</div>
+<div class="game-copy">
+<div class="game-label">Logger host character</div>
+<div class="game-value" id=hostValue>Not detected</div>
+<div class="game-detail" id=hostDetail>Character name appears after login</div>
+</div>
+</div>
+</section>
+<div class="loot-overview">
+<div class="overview-card">
+<span class="overview-icon">♟</span>
+<div class="overview-copy">
+<div class="overview-value" id=lootVisiblePlayers>0</div>
+<div class="overview-label">Visible players</div>
+</div>
+</div>
+<div class="overview-card">
+<span class="overview-icon">◇</span>
+<div class="overview-copy">
+<div class="overview-value" id=lootVisibleItems>0</div>
+<div class="overview-label">Item types</div>
+</div>
+</div>
+<div class="overview-card">
+<span class="overview-icon">×</span>
+<div class="overview-copy">
+<div class="overview-value" id=lootVisibleQty>0</div>
+<div class="overview-label">Total quantity</div>
+</div>
+</div>
+<div class="overview-card">
+<span class="overview-icon">◷</span>
+<div class="overview-copy">
+<div class="overview-value" id=lootRuntime>0m 0s</div>
+<div class="overview-label">Session runtime</div>
+</div>
+</div>
+</div>
+<div class="notice" id=notice>
+<span id=noticeText>
+</span>
+<button id=noticeAction>Retry capture</button>
+</div>
+<div class="command-bar">
+<div class="toolbar">
+<div class="search-wrap">
+<input class="search" id=search placeholder="Search players, groups, guilds, alliances, items, IDs or sources…">
+<kbd class="search-key">/</kbd>
+<button aria-label="Clear loot search" class="search-clear" id=searchClear title="Clear search">×</button>
+</div>
+<div class="actions">
+<div class="action-group">
+<button class="btn primary" id=newSession>
+<span class="button-icon">＋</span>
+<span class="btn-label">New session</span>
+</button>
+</div>
+<div class="action-group">
+<button class="btn live-toggle" id=liveToggle>
+<span class="button-icon">Ⅱ</span>
+<span class="btn-label secondary" id=liveToggleLabel>Pause view</span>
+<span class="pause-count" hidden="" id=pauseCount>0</span>
+</button>
+</div>
+<div class="action-group">
+<button class="btn" id=expandCollapse title="Collapse all visible players">
+<span class="button-icon">⌃</span>
+<span class="btn-label secondary" id=expandCollapseLabel>Collapse</span>
+</button>
+</div>
+<div class="action-group">
+<button class="btn" id=copySummary>
+<span class="btn-label">Copy summary</span>
+</button>
+<button class="btn" id=export title="Export visible loot as TXT">
+<span class="button-icon">⇩</span>
+<span class="btn-label">Export TXT</span>
+</button>
+<button class="btn" id=refreshCatalog title="Refresh Albion item names and icons">
+<span class="button-icon">↻</span>
+<span class="btn-label secondary">Refresh items</span>
+</button>
+</div>
+<div class="action-group">
+<button class="btn danger" id=clear title="Clear the current loot session">
+<span class="button-icon">⌫</span>
+<span class="btn-label secondary">Clear session</span>
+</button>
+<button aria-label="Close Albion Loot Logger" class="btn danger" id=exit title="Close Albion Loot Logger">Exit</button>
+</div>
+</div>
+</div>
+<div class="filter-row">
+<div class="quick-filters">
+<button class="filter-chip active" data-quick-filter="all">All loot</button>
+<button class="filter-chip" data-quick-filter="gear">Gear &amp; mounts</button>
+<button class="filter-chip" data-quick-filter="resources">Resources</button>
+<button class="filter-chip" data-quick-filter="consumables">Food &amp; potions</button>
+<button class="filter-chip" data-quick-filter="other">Other</button>
+<button class="filter-chip" data-quick-filter="recent">Recent 5m</button>
+<button class="filter-chip" id=pinnedOnly>★ Pinned</button>
+</div>
+<div class="view-controls">
+<span class="result-summary" id=lootResultSummary>Showing all visible loot</span>
+<select class="mini-select" id=viewSort>
+<option value="settings">Default sort</option>
+<option value="latest">Newest</option>
+<option value="quantity">Most loot</option>
+<option value="name">Name A–Z</option>
+<option value="silver">Highest silver value</option>
+</select>
+<button class="density-toggle" id=densityToggle>Comfortable</button>
+</div>
+</div>
+</div>
+<main class="players" id=players>
+</main>
+</section>
+<section class="tab-panel" id=bankPanel>
+<div class="options-header">
+<div>
+<h2>Bank compare</h2>
+</div>
+</div>
+<section class="bank-import" id=bankImport>
+<div>
+<h3>Bank export</h3>
+<div class="bank-drop" id=bankDrop>Drop the Albion bank log export here</div>
+</div>
+<div class="bank-actions">
+<label class="file-picker">Choose files<input accept=".txt,.tsv,.csv,text/plain,text/tab-separated-values" id=bankFile multiple type="file">
+</label>
+<button class="btn primary" disabled="" id=bankUpload>Import</button>
+<button class="btn" id=bankClipboard>Import from clipboard</button>
+<button class="btn danger" id=bankClear>Clear comparison</button>
+</div>
+</section>
+<div class="stats">
+<div class="stat">
+<div class="label">Imported file</div>
+<div class="value" id=bankFileName style="font-size:18px">None</div>
+<div class="sub" id=bankImportedAt>Import a bank log</div>
+</div>
+<div class="stat">
+<div class="label">Matched item types</div>
+<div class="value" id=bankMatched>0</div>
+<div class="sub">Fully matched</div>
+</div>
+<div class="stat">
+<div class="label">Partial</div>
+<div class="value" id=bankPartial>0</div>
+<div class="sub">Partially deposited</div>
+</div>
+<div class="stat">
+<div class="label">Missing item types</div>
+<div class="value" id=bankMissing>0</div>
+<div class="sub">Not deposited</div>
+</div>
+</div>
+<div class="stats bank-silver-overview">
+<div class="stat">
+<div class="label">Deposited silver</div>
+<div class="value" id=bankSilverDeposited>0</div>
+<div class="sub">Confirmed in bank</div>
+</div>
+<div class="stat">
+<div class="label">Missing silver</div>
+<div class="value" id=bankSilverMissing>0</div>
+<div class="sub">Still to deposit</div>
+</div>
+<div class="stat">
+<div class="label">Lost silver</div>
+<div class="value" id=bankSilverLost>0</div>
+<div class="sub">Lost after looting</div>
+</div>
+</div>
+<div class="bank-toolbar">
+<input class="search" id=bankSearch placeholder="Search player, guild, alliance, item or source…">
+<select id=bankStatusFilter>
+<option value=all>All statuses</option>
+<option value=open>Missing + partial only</option>
+<option value=missing>Missing only</option>
+<option value=partial>Partial only</option>
+<option value=matched>Matched only</option>
+<option value=extra>Extra only</option>
+<option value=different>Different item only</option>
+<option value=lost>Lost only</option>
+<option value=resolved>Resolved only</option>
+<option value=ignored>Ignored only</option>
+</select>
+<select id=bankViewSort>
+<option value="status">Status</option>
+<option value="latest">Newest</option>
+<option value="quantity">Quantity</option>
+<option value="name">Name</option>
+<option value="silver">Silver</option>
+</select>
+<button class="btn" id=copyMissing>Copy missing list</button>
+</div>
+<div class="bank-legend">
+<span>
+<i class="legend-dot matched">
+</i>Found in bank export</span>
+<span>
+<i class="legend-dot partial">
+</i>Found, but quantity is partial</span>
+<span>
+<i class="legend-dot missing">
+</i>Not found in bank export</span>
+<span>
+<i class="legend-dot resolved">
+</i>Manually resolved</span>
+<span>
+<i class="legend-dot ignored">
+</i>Ignored</span>
+<span>
+<i class="legend-dot lost">
+</i>Lost after looting</span>
+</div>
+<main class="players" id=bankPlayers>
+</main>
+</section>
+<section class="tab-panel" id=optionsPanel>
+<div class="options-header">
+<div>
+<h2>Options</h2>
+<p>Appearance, filters, roster and layout. Press Save options when finished.</p>
+</div>
+<div class="unsaved" id=unsaved>Unsaved changes</div>
+</div>
+<div class="settings-grid">
+<section class="settings-card">
+<h3>Interface</h3>
+<small class=setting-help>Notifications, cards and optional pages.</small>
+<div class="setting-list">
+<label class="setting-row appearance-row ll8310-theme-row">
+<span class=setting-copy>
+<span class=setting-title>Interface theme</span>
+<small>50 themes incl. Albion side art.</small>
+</span>
+<select id=optTheme class=mini-select>
+</select>
+<input id=optDarkMode type=checkbox hidden>
+</label>
+<label class="setting-row">
+<span class="setting-copy">
+<span class="setting-title">Show live capture pipeline</span>
+</span>
+<span class="toggle">
+<input id=optLiveCapture type="checkbox">
+<span class="toggle-track">
+</span>
+</span>
+</label>
+<label class="setting-row">
+<span class="setting-copy">
+<span class="setting-title">Show loot popups</span>
+</span>
+<span class="toggle">
+<input id=optLootToasts type="checkbox">
+<span class="toggle-track">
+</span>
+</span>
+</label>
+<label class="setting-row">
+<span class="setting-copy">
+<span class="setting-title">Show skipped-packet messages</span>
+</span>
+<span class="toggle">
+<input id=optSkipMessages type="checkbox">
+<span class="toggle-track">
+</span>
+</span>
+</label>
+<label class="setting-row">
+<span class="setting-copy">
+<span class="setting-title">Show Albion item IDs</span>
+</span>
+<span class="toggle">
+<input id=optItemIDs type="checkbox">
+<span class="toggle-track">
+</span>
+</span>
+</label>
+<label class="setting-row">
+<span class="setting-copy">
+<span class="setting-title">Compact item cards</span>
+</span>
+<span class="toggle">
+<input id=optCompact type="checkbox">
+<span class="toggle-track">
+</span>
+</span>
+</label>
+<label class="setting-row">
+<span class="setting-copy">
+<span class="setting-title">Small view</span>
+<small>Item and quantity only in Loot View and Bank Compare.</small>
+</span>
+<span class="toggle">
+<input id=optSmallView type="checkbox">
+<span class="toggle-track">
+</span>
+</span>
+</label>
+<label class="setting-row">
+<span class="setting-copy">
+<span class="setting-title">Collapse new players by default</span>
+</span>
+<span class="toggle">
+<input id=optCollapseDefault type="checkbox">
+<span class="toggle-track">
+</span>
+</span>
+</label>
+</div>
+<div class="category-toolbar">Pages: <label>
+<input id=optShowAnalytics type="checkbox"> Analytics</label>
+<label>
+<input id=optShowAdvanced type="checkbox"> Advanced</label>
+<label>
+<input id=optShowHelp type="checkbox"> Help</label>
+</div>
+</section>
+<div class=settings-stack>
+<section class="settings-card">
+<h3>Item categories</h3>
+<div class="category-toolbar">
+<button class="btn small" id=allCategories>Select all</button>
+<button class="btn small" id=noCategories>Select none</button>
+</div>
+<div class="category-grid">
+<label class="category-option">
+<input data-category="equipment" type="checkbox">
+<span class="category-check">✓</span>
+<span>
+<span class="category-name">Equipment</span>
+<span class="category-help">Weapons, armor, bags and capes</span>
+</span>
+</label>
+<label class="category-option">
+<input data-category="mounts" type="checkbox">
+<span class="category-check">✓</span>
+<span>
+<span class="category-name">Mounts</span>
+<span class="category-help">Horses, oxen, mammoths and similar</span>
+</span>
+</label>
+<label class="category-option">
+<input data-category="resources" type="checkbox">
+<span class="category-check">✓</span>
+<span>
+<span class="category-name">Resources</span>
+<span class="category-help">Raw and refined crafting materials</span>
+</span>
+</label>
+<label class="category-option">
+<input data-category="potions" type="checkbox">
+<span class="category-check">✓</span>
+<span>
+<span class="category-name">Potions</span>
+<span class="category-help">Potions and elixirs</span>
+</span>
+</label>
+<label class="category-option">
+<input data-category="food" type="checkbox">
+<span class="category-check">✓</span>
+<span>
+<span class="category-name">Food</span>
+<span class="category-help">Meals, stews, omelettes and similar</span>
+</span>
+</label>
+<label class="category-option">
+<input data-category="trash" type="checkbox">
+<span class="category-check">✓</span>
+<span>
+<span class="category-name">Trash</span>
+<span class="category-help">Broken or trash-tier items</span>
+</span>
+</label>
+<label class="category-option">
+<input data-category="journals" type="checkbox">
+<span class="category-check">✓</span>
+<span>
+<span class="category-name">Journals &amp; books</span>
+<span class="category-help">Journals, tomes and books</span>
+</span>
+</label>
+<label class="category-option">
+<input data-category="artifacts" type="checkbox">
+<span class="category-check">✓</span>
+<span>
+<span class="category-name">Artifacts &amp; tokens</span>
+<span class="category-help">Runes, relics, shards and tokens</span>
+</span>
+</label>
+<label class="category-option">
+<input data-category="other" type="checkbox">
+<span class="category-check">✓</span>
+<span>
+<span class="category-name">Other / unknown</span>
+<span class="category-help">Items that cannot be categorized safely</span>
+</span>
+</label>
+</div>
+</section>
+<section class="settings-card">
+<h3>Sorting and display filters</h3>
+<div class="select-grid">
+<div class="field">
+<label for="optPlayerSort">Sort players</label>
+<select id=optPlayerSort>
+<option value="latest">Latest loot first</option>
+<option value="quantity">Highest quantity first</option>
+<option value="name">Name A–Z</option>
+</select>
+</div>
+<div class="field">
+<label for="optItemSort">Sort items</label>
+<select id=optItemSort>
+<option value="latest">Latest loot first</option>
+<option value="quantity">Highest quantity first</option>
+<option value="name">Name A–Z</option>
+</select>
+</div>
+<div class="field">
+<label for="optMinimum">Minimum total quantity shown</label>
+<input id=optMinimum max="1000000000" min="1" step="1" type="number">
+</div>
+</div>
+</section>
+</div>
+<section class="settings-card wide">
+<h3>Bank compare roster</h3>
+<p class="roster-intro">Add individual characters or whole guilds. Use the lookup button to verify character names and load guild members. Bank Compare then shows tracked people who looted something, including anyone who deposited nothing as missing.</p>
+<div class="roster-grid">
+<div class="field">
+<label for="optBankPlayers">Tracked players</label>
+<textarea id=optBankPlayers placeholder="One player per line, or separate names with commas" spellcheck="false">
+</textarea>
+</div>
+<div class="field">
+<label for="optBankGuilds">Tracked guilds</label>
+<textarea id=optBankGuilds placeholder="One guild per line, or separate names with commas" spellcheck="false">
+</textarea>
+</div>
+</div>
+<div class="roster-footer">
+<div class="field roster-server">
+<label for="optAlbionServer">Albion server used for player and guild lookup</label>
+<select id=optAlbionServer>
+<option value="europe">Europe</option>
+<option value="americas">Americas</option>
+<option value="asia">Asia</option>
+</select>
+</div>
+<div class="roster-actions">
+<button class="btn small" id=refreshBankGuilds type="button">Look up players &amp; guilds</button>
+<span class="roster-status" id=bankRosterStatus>No custom roster configured</span>
+</div>
+</div>
+</section>
+</div>
+<div class="settings-actions">
+<button class="btn danger" id=resetSettings>Reset defaults</button>
+<button class="btn primary" id=saveSettings>Save options</button>
+</div>
+</section>
+<section class="tab-panel" id=analyticsPanel>
+<div class="options-header">
+<div>
+<h2>Analytics</h2>
+</div>
+<div class="analytics-actions">
+<button class="btn" id=analyticsReload>Reload</button>
+<button class="btn" id=analyticsRestartCapture>Restart capture</button>
+<button class="btn primary" id=diagnosticsDownload>Diagnostics + loot trace</button>
+</div>
+</div>
+<div class="stats">
+<div class="stat">
+<div class="label">Worked for</div>
+<div class="value" id=workedFor>0m 0s</div>
+<div class="sub">Current session runtime</div>
+</div>
+<div class="stat">
+<div class="label">Visible players</div>
+<div class="value" id=playerCount>0</div>
+<div class="sub">Players matching your options</div>
+</div>
+<div class="stat">
+<div class="label">Visible item types</div>
+<div class="value" id=itemCount>0</div>
+<div class="sub" id=catalogState>Loading catalog…</div>
+</div>
+<div class="stat">
+<div class="label">Visible quantity</div>
+<div class="value" id=totalQty>0</div>
+<div class="sub">After category and source filters</div>
+</div>
+<div class="stat">
+<div class="label">Session</div>
+<div class="value" id=session style="font-size:19px">—</div>
+<div class="sub" id=started>—</div>
+</div>
+<div class="stat">
+<div class="label">Capture state</div>
+<div class="value" id=analyticsCapture style="font-size:19px">Starting</div>
+<div class="sub" id=analyticsCaptureDetail>—</div>
+</div>
+<div class="stat">
+<div class="label">Albion Online</div>
+<div class="value" id=analyticsGame style="font-size:19px">Waiting</div>
+<div class="sub" id=analyticsGameDetail>—</div>
+</div>
+<div class="stat">
+<div class="label">Host character</div>
+<div class="value" id=analyticsHost style="font-size:19px">Not detected</div>
+<div class="sub">Character running this logger</div>
+</div>
+</div>
+<section class="diagnostics" id=captureDiagnostics>
+<div class="diagnostics-head">
+<div class="diagnostics-title">Live capture pipeline</div>
+</div>
+<div class="diag-grid">
+<div class="diag" id=diagStreamCard>
+<div class="diag-label">Stream started</div>
+<div class="diag-value" id=diagStream>No</div>
+</div>
+<div class="diag" id=diagRawCard>
+<div class="diag-label">Raw callbacks</div>
+<div class="diag-value" id=diagRaw>0</div>
+</div>
+<div class="diag" id=diagUDPCard>
+<div class="diag-label">Albion UDP</div>
+<div class="diag-value" id=diagUDP>0</div>
+</div>
+<div class="diag" id=diagPhotonCard>
+<div class="diag-label">Photon packets</div>
+<div class="diag-value" id=diagPhoton>0</div>
+</div>
+<div class="diag" id=diagReliableCard>
+<div class="diag-label">Reliable messages</div>
+<div class="diag-value" id=diagReliable>0</div>
+</div>
+<div class="diag" id=diagEventsCard>
+<div class="diag-label">Events / responses</div>
+<div class="diag-value" id=diagEvents>0 / 0</div>
+</div>
+<div class="diag" id=diagLootCard>
+<div class="diag-label">Loot (other / host)</div>
+<div class="diag-value" id=diagLoot>0 / 0</div>
+</div>
+<div class="diag" id=diagHostCard>
+<div class="diag-label">Host detections</div>
+<div class="diag-value" id=diagHost>0</div>
+</div>
+</div>
+</section>
+<div class="insights-grid">
+<section class="insight-card">
+<div class="insight-head">
+<h3>Top looters</h3>
+</div>
+<div class="rank-list" id=topLooters>
+</div>
+</section>
+<section class="insight-card">
+<div class="insight-head">
+<h3>Top items</h3>
+</div>
+<div class="rank-list" id=topItems>
+</div>
+</section>
+<section class="insight-card">
+<div class="insight-head">
+<h3>Most expensive items</h3>
+<small>Top 6 prices</small>
+</div>
+<div class="rank-list" id=mostExpensiveItem>
+</div>
+</section>
+<section class="insight-card wide">
+<div class="insight-head">
+<h3>Recent activity</h3>
+</div>
+<div class="activity-list" id=recentActivity>
+</div>
+</section>
+<section class="insight-card">
+<div class="insight-head">
+<h3>Session notes</h3>
+<small>Saved locally</small>
+</div>
+<textarea class="session-note" id=sessionNote maxlength="5000" placeholder="Session notes…">
+</textarea>
+<div class="note-footer">
+<span id=noteStatus>Saved locally</span>
+<button class="btn small danger" id=clearSessionNote>Clear note</button>
+</div>
+</section>
+</div>
+<div class="analytics-meta">
+<section class="settings-card">
+<h3>Session details</h3>
+<div class="kv-list">
+<div class="kv">
+<span>Started</span>
+<span id=analyticsStarted>—</span>
+</div>
+<div class="kv">
+<span>Session ID</span>
+<span id=analyticsSessionID>—</span>
+</div>
+<div class="kv">
+<span>Tracked players</span>
+<span id=analyticsPlayers>0</span>
+</div>
+<div class="kv">
+<span>Tracked quantity</span>
+<span id=analyticsQuantity>0</span>
+</div>
+</div>
+</section>
+<section class="settings-card">
+<h3>Capture details</h3>
+<div class="kv-list">
+<div class="kv">
+<span>Status</span>
+<span id=analyticsStatus>—</span>
+</div>
+<div class="kv">
+<span>Network interfaces</span>
+<span id=analyticsInterfaces>—</span>
+</div>
+<div class="kv">
+<span>Game process</span>
+<span id=analyticsProcess>—</span>
+</div>
+<div class="kv">
+<span>Catalog</span>
+<span id=analyticsCatalog>—</span>
+</div>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div class="toast" id=toast>
+</div>
+<div class="modal-backdrop" hidden="" id=itemModal>
+<section aria-labelledby="itemModalTitle" aria-modal="true" class="item-modal" role="dialog">
+<div class="modal-head">
+<h2 id=itemModalTitle>Item details</h2>
+<button class="modal-close" id=closeItemModal>×</button>
+</div>
+<div class="modal-body" id=itemModalBody>
+</div>
+<div class="modal-actions">
+<button class="btn" id=copyModalItem>Copy details</button>
+<button class="btn primary" id=closeItemModalBottom>Close</button>
+</div>
+</section>
+</div>
+<script src="scripts/inline-01.js">
+</script>
+<script src="scripts/pre-00.js">
+</script>
+<script src="scripts/pre-01.js">
+</script>
+<script src="scripts/pre-02.js">
+</script>
+<script src="scripts/pre-03.js">
+</script>
+<script src="scripts/pre-04.js">
+</script>
+<script src="scripts/pre-05.js">
+</script>
+<script src="scripts/pre-06.js">
+</script>
+<script src="scripts/pre-07.js">
+</script>
+<script src="scripts/pre-08.js">
+</script>
+<script src="scripts/pre-09.js">
+</script>
+<script src="scripts/pre-10.js">
+</script>
+<script src="scripts/pre-11.js">
+</script>
+<script src="scripts/pre-12.js">
+</script>
+<script src="scripts/app.js">
+</script>
+<script src="scripts/inline-02.js">
+</script>
+<style>.settings-stack{display:grid;gap:15px}.settings-stack .category-grid{grid-template-columns:repeat(2,1fr)}@media(max-width:1000px){.settings-stack .category-grid{grid-template-columns:1fr}}</style>
+<style>.bank-player{content-visibility:auto}</style>
+</body>
+</html>

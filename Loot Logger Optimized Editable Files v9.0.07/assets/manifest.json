@@ -1,0 +1,65 @@
+[
+  {
+    "file": "resource-00-16x16.png",
+    "offset": 7528456,
+    "bytes": 673,
+    "width": 16,
+    "height": 16,
+    "mode": "RGBA",
+    "sha256": "015ca3cc5036ed5634bbd8235271d91b39404f846e95b96de07be0581d7fc4af"
+  },
+  {
+    "file": "resource-01-24x24.png",
+    "offset": 7529132,
+    "bytes": 1295,
+    "width": 24,
+    "height": 24,
+    "mode": "RGBA",
+    "sha256": "0432d60d9ee53e7e98ec58974e0284c08dc0d5c736a35141a2866a22d93aaa44"
+  },
+  {
+    "file": "resource-02-32x32.png",
+    "offset": 7530428,
+    "bytes": 2021,
+    "width": 32,
+    "height": 32,
+    "mode": "RGBA",
+    "sha256": "5c95ac4b056506192bdc36f804c1e5fcf154bbebcf2b17deed7fd55eec8bce81"
+  },
+  {
+    "file": "resource-03-48x48.png",
+    "offset": 7532452,
+    "bytes": 3669,
+    "width": 48,
+    "height": 48,
+    "mode": "RGBA",
+    "sha256": "03f164455d38774c16d886a290ac7b02d252f66253737dd0e1b171ea279939bf"
+  },
+  {
+    "file": "resource-04-64x64.png",
+    "offset": 7536124,
+    "bytes": 5826,
+    "width": 64,
+    "height": 64,
+    "mode": "RGBA",
+    "sha256": "ad7e7899c245e8229344bdfdd7df975f5170fcf2cbcfc99a5375c4718f6e25fe"
+  },
+  {
+    "file": "resource-05-128x128.png",
+    "offset": 7541952,
+    "bytes": 16672,
+    "width": 128,
+    "height": 128,
+    "mode": "RGBA",
+    "sha256": "a075589e770b35fc35d8e217ec7823316d02c2112b1ef178e96d40cd46c2b9eb"
+  },
+  {
+    "file": "resource-06-256x256.png",
+    "offset": 7558624,
+    "bytes": 48521,
+    "width": 256,
+    "height": 256,
+    "mode": "RGBA",
+    "sha256": "712c83107eaafd23365961d56c171f0756266aafeae851ad3661ae081c3ca1e4"
+  }
+]
