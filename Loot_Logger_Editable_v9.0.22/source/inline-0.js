@@ -1,0 +1,1 @@
+(()=>{let d=document.documentElement,x='dark';d.style.visibility='hidden';try{x=localStorage['albion-theme']||(localStorage['albion-dark-mode']==='false'?'light':'dark')}catch{}d.dataset.theme=x;d.style.colorScheme=x==='light'?'light':'dark'})(); 

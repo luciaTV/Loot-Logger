@@ -1,0 +1,1 @@
+(()=>{const addLostLegend=()=>{const legend=document.querySelector('.bank-legend');if(legend&&!legend.querySelector('.legend-dot.lost'))legend.insertAdjacentHTML('beforeend','<span><i class="legend-dot lost"></i>Looted, then lost after death</span>')};addLostLegend();new MutationObserver(addLostLegend).observe(document.body,{childList:true,subtree:true});})();

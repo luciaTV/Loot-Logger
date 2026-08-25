@@ -1,0 +1,1 @@
+(()=>{const go=()=>{try{window.moveTo(0,0);window.resizeTo(screen.availWidth,screen.availHeight)}catch{}};addEventListener('load',()=>setTimeout(go,120));setTimeout(go,500)})();
